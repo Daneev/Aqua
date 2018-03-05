@@ -1,6 +1,6 @@
 
-import pytest
-from devices.performance_object import Klapan, Pompa
+
+from devices.performance_devices import Klapan, Pompa
 
 
 def test_klapan():

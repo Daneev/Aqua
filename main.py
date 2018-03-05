@@ -1,15 +1,13 @@
-from devices.performance_object import Klapan, Pompa
 import time
 
-
-
-
+from devices.performance_devices import Klapan, Pompa
 
 if __name__ == '__main__':
     print('start')
     klapan = Klapan(5, 3)
     print(klapan.add(2, 3))
     pomp = Pompa(4, 5)
+    print(repr(pomp))
     pomp.on
     klapan.on
     print(pomp.state)

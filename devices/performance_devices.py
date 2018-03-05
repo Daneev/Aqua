@@ -5,56 +5,17 @@
 import threading, time, datetime
 
 
-class Engine():
-    '''
-    Базовый класс для создания устройств.
-    '''
-
-    def __init__(self, pin, time_loop):
-        self.state = 'off'
-        self.pin = pin
-        # self._time = time_loop
-        self.tm = Timer_Device(time_loop, self)
-
-    @property
-    def on(self):
-        return self._start()
-
-    def _start(self):
-        self.state = 'on'
-
-        self.tm.start()
-        # self._timer = threading.Timer(0, self._clock)
-        # self._timer.start()
-        print('{} Start is {}'.format(type(self).__name__, time.ctime()))
-
-    @property
-    def off(self):
-        return self._stop()
-
-    def _stop(self):
-        self.state = 'off'
-        # self._timer.cancel()
-        print('{} Stop is {}'.format(type(self).__name__, time.ctime()))
-
-    def __str__(self):
-        return (type(self).__name__)
-
-    def __repr__(self):
-        return 'Device {}'.format(type(self).__name__)
-
-
 class Timer_Device():
     '''
     Таймер для контроля продолжительности работы устройств.
     '''
 
     def __init__(self, *args):
-        # super(Engine, self).__init__()
         self._time = args[0]
-        self.device = args[1]
 
-    def start(self):
+    def start(self, device):
+        self.device = device
+        print('timer start')
         self._timer = threading.Timer(0, self._clock)
         self._timer.start()
 
@@ -63,8 +24,45 @@ class Timer_Device():
         self.stop()
 
     def stop(self):
+        device = self.device
+        print('timer stop')
         self._timer.cancel()
-        self.device.off
+        device.off
+
+
+class Engine():
+    '''
+    Базовый класс для создания устройств.
+    '''
+
+    def __init__(self, pin, time_loop):
+        self.state = 'off'
+        self.pin = pin
+        self._time = time_loop
+        self._timer = Timer_Device(self._time)
+
+    @property
+    def on(self):
+        return self._start()
+
+    def _start(self):
+        self.state = 'on'
+        self._timer.start(self)
+        print('{} Start is {}'.format(type(self).__name__, time.ctime()))
+
+    @property
+    def off(self):
+        return self._stop()
+
+    def _stop(self):
+        self.state = 'off'
+        print('{} Stop is {}'.format(type(self).__name__, time.ctime()))
+
+    def __str__(self):
+        return (type(self).__name__)
+
+    def __repr__(self):
+        return 'Device {}, state {}, pin {}, work_time {}'.format(type(self).__name__, self.state, self.pin, self._time)
 
 
 class Klapan(Engine):
